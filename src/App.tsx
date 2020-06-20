@@ -10,9 +10,9 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 
 import theme from "./theme";
-import { Editor, Node } from "./editor";
+import { SlateEditor, Node } from "./editor";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     paddingTop: theme.spacing(10),
     paddingBottom: theme.spacing(4),
@@ -45,9 +45,9 @@ export function App() {
         </Typography>
         <Card className={s.card} elevation={0}>
           <CardContent>
-            <Editor
+            <SlateEditor
               value={value}
-              onChange={x => setValue(x)}
+              onChange={(x) => setValue(x)}
               placeholder="Write text here..."
               autoFocus
               spellCheck

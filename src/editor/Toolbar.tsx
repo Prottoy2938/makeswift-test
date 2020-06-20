@@ -41,24 +41,48 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export interface ToolbarProps extends Omit<PopperProps, "children"> {}
+export interface ToolbarProps extends Omit<PopperProps, "children"> {
+  editor: any;
+  toggleFormat: (editor: any, format: any) => void;
+}
 
 export function Toolbar(props: ToolbarProps) {
   const [link, setLink] = React.useState("");
   const s = useStyles();
-
+  const { editor, open, toggleFormat } = props;
   return (
-    <Popper className={s.root} {...props}>
+    <Popper className={s.root} open={open}>
       {!link ? (
         /* Formatting controls */
         <ButtonGroup variant="text" color="primary">
-          <IconButton className={s.button} size="small">
+          <IconButton
+            onMouseDown={(event) => {
+              event.preventDefault();
+              toggleFormat(editor, "bold");
+            }}
+            className={s.button}
+            size="small"
+          >
             <FormatBold fontSize="small" />
           </IconButton>
-          <IconButton className={s.button} size="small">
+          <IconButton
+            onMouseDown={(event) => {
+              event.preventDefault();
+              toggleFormat(editor, "italic");
+            }}
+            className={s.button}
+            size="small"
+          >
             <FormatItalic fontSize="small" />
           </IconButton>
-          <IconButton className={s.button} size="small">
+          <IconButton
+            onMouseDown={(event) => {
+              event.preventDefault();
+              toggleFormat(editor, "underlined");
+            }}
+            className={s.button}
+            size="small"
+          >
             <FormatUnderlined fontSize="small" />
           </IconButton>
           <IconButton
@@ -93,4 +117,10 @@ export function Toolbar(props: ToolbarProps) {
       )}
     </Popper>
   );
+}
+
+interface FormatBtnProps {
+  format: string;
+  icon: string;
+  editor: any;
 }
