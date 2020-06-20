@@ -15,7 +15,7 @@ import {
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     background: theme.palette.common.black,
   },
@@ -44,12 +44,12 @@ const useStyles = makeStyles(theme => ({
 export interface ToolbarProps extends Omit<PopperProps, "children"> {}
 
 export function Toolbar(props: ToolbarProps) {
-  const [link, setLink] = React.useState(null);
+  const [link, setLink] = React.useState("");
   const s = useStyles();
 
   return (
     <Popper className={s.root} {...props}>
-      {link === null ? (
+      {!link ? (
         /* Formatting controls */
         <ButtonGroup variant="text" color="primary">
           <IconButton className={s.button} size="small">
@@ -71,22 +71,22 @@ export function Toolbar(props: ToolbarProps) {
         </ButtonGroup>
       ) : (
         /* URL input field */
-        <form onSubmit={x => x.preventDefault()}>
+        <form onSubmit={(x) => x.preventDefault()}>
           <Input
             className={s.input}
             type="url"
+            fullWidth
             value={link}
-            onChange={x => setLink(x.target.value)}
+            onChange={(x) => setLink(x.target.value)}
             endAdornment={
               <Close
                 className={s.close}
                 fontSize="small"
-                onClick={() => setLink(null)}
+                onClick={() => setLink("")}
               />
             }
             placeholder="https://"
             disableUnderline
-            fullWidth
             autoFocus
           />
         </form>

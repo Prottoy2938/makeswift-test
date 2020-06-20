@@ -3,14 +3,21 @@
   "version": "1.0.0",
   "description": "Makeswift front-end programming challenge.",
   "keywords": [],
-  "browserslist": [">0.2%", "not dead", "not ie <= 11", "not op_mini all"],
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
   "dependencies": {
     "@material-ui/core": "4.10.2",
     "@material-ui/icons": "4.9.1",
+    "@types/react-dom": "^16.9.8",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "slate": "0.58.3",
-    "slate-react": "0.58.3"
+    "slate-react": "0.58.3",
+    "typescript": "^3.9.5"
   },
   "devDependencies": {
     "react-scripts": "^3.1.2"
