@@ -43,10 +43,9 @@ export interface EditorProps {
   spellCheck?: boolean;
 }
 
-const editor = React.useMemo(() => withReact(createEditor()), []);
-
 export function SlateEditor(props: EditorProps) {
   const { value, onChange, ...other } = props;
+  const editor = React.useMemo(() => withReact(createEditor()), []);
 
   return (
     <Slate editor={editor} value={value} onChange={onChange}>
@@ -55,17 +54,6 @@ export function SlateEditor(props: EditorProps) {
         renderElement={renderElement}
         renderLeaf={renderLeaf}
         {...other} //placeholder, autoFocus, spellCheck
-        onDOMBeforeInput={(event) => {
-          event.preventDefault();
-          // switch (event.inputType) {
-          //   case "formatBold":
-          //     return toggleFormat(editor, "bold");
-          //   case "formatItalic":
-          //     return toggleFormat(editor, "italic");
-          //   case "formatUnderline":
-          //     return toggleFormat(editor, "underline");
-          // }
-        }}
       />
     </Slate>
   );
@@ -74,6 +62,8 @@ export function SlateEditor(props: EditorProps) {
 export { Node };
 
 const toggleFormat = (editor: any, format: any) => {
+  console.log(format);
+
   const isActive = isFormatActive(editor, format);
   Transforms.setNodes(
     editor,

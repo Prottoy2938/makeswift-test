@@ -118,9 +118,3 @@ export function Toolbar(props: ToolbarProps) {
     </Popper>
   );
 }
-
-interface FormatBtnProps {
-  format: string;
-  icon: string;
-  editor: any;
-}
