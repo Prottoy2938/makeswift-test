@@ -12,6 +12,7 @@ import {
   FormatUnderlined,
   Link,
   Close,
+  EditRounded,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -43,43 +44,57 @@ const useStyles = makeStyles((theme) => ({
 
 export interface ToolbarProps extends Omit<PopperProps, "children"> {
   editor: any;
-  toggleFormat: (editor: any, format: any) => void;
+  toggleFormat: (editor: any, format: string) => void;
+  insertLink: (editor: any, urlLink: string) => void;
 }
 
 export function Toolbar(props: ToolbarProps) {
-  const [link, setLink] = React.useState("");
+  const [link, setLink] = React.useState(false);
+  const [urlLink, setUrlLink] = React.useState("");
+  //capturing text selection for `add url feature`
+  const [captureSelection, setCPSelection] = React.useState([]);
   const s = useStyles();
-  const { editor, open, toggleFormat } = props;
+  const { editor, open, toggleFormat, insertLink } = props;
+
+  const handleMouseDown = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    format: string,
+  ) => {
+    event.preventDefault();
+    toggleFormat(editor, format);
+  };
+
+  const handleUrlSubmit = (
+    e: React.FormEvent<HTMLFormElement>,
+    urlLink: string,
+  ) => {
+    e.preventDefault();
+    editor.selection = captureSelection;
+    if (!urlLink) return;
+    insertLink(editor, urlLink);
+  };
+
   return (
     <Popper className={s.root} open={open}>
       {!link ? (
         /* Formatting controls */
         <ButtonGroup variant="text" color="primary">
           <IconButton
-            onMouseDown={(event) => {
-              event.preventDefault();
-              toggleFormat(editor, "bold");
-            }}
+            onMouseDown={(event) => handleMouseDown(event, "bold")}
             className={s.button}
             size="small"
           >
             <FormatBold fontSize="small" />
           </IconButton>
           <IconButton
-            onMouseDown={(event) => {
-              event.preventDefault();
-              toggleFormat(editor, "italic");
-            }}
+            onMouseDown={(event) => handleMouseDown(event, "italic")}
             className={s.button}
             size="small"
           >
             <FormatItalic fontSize="small" />
           </IconButton>
           <IconButton
-            onMouseDown={(event) => {
-              event.preventDefault();
-              toggleFormat(editor, "underlined");
-            }}
+            onMouseDown={(event) => handleMouseDown(event, "underlined")}
             className={s.button}
             size="small"
           >
@@ -88,25 +103,28 @@ export function Toolbar(props: ToolbarProps) {
           <IconButton
             className={s.button}
             size="small"
-            onClick={() => setLink("")}
+            onClick={() => {
+              setCPSelection(editor.selection);
+              setLink(true);
+            }}
           >
             <Link fontSize="small" />
           </IconButton>
         </ButtonGroup>
       ) : (
         /* URL input field */
-        <form onSubmit={(x) => x.preventDefault()}>
+        <form onSubmit={(e) => handleUrlSubmit(e, urlLink)}>
           <Input
             className={s.input}
             type="url"
             fullWidth
-            value={link}
-            onChange={(x) => setLink(x.target.value)}
+            value={urlLink}
+            onChange={(x) => setUrlLink(x.target.value)}
             endAdornment={
               <Close
                 className={s.close}
                 fontSize="small"
-                onClick={() => setLink("")}
+                onClick={() => setLink(false)}
               />
             }
             placeholder="https://"
