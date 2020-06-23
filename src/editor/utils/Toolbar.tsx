@@ -49,7 +49,7 @@ export interface ToolbarProps extends Omit<PopperProps, "children"> {
 }
 
 export function Toolbar(props: ToolbarProps) {
-  const [link, setLink] = React.useState(false);
+  const [openLink, setOpenLink] = React.useState(false);
   const [urlLink, setUrlLink] = React.useState("");
   //capturing text selection for `add url feature`
   const [captureSelection, setCPSelection] = React.useState([]);
@@ -72,11 +72,15 @@ export function Toolbar(props: ToolbarProps) {
     editor.selection = captureSelection;
     if (!urlLink) return;
     insertLink(editor, urlLink);
+    //closing the url form
+    setOpenLink(false);
+    //clearing the url input field once its submitted
+    setUrlLink("");
   };
 
   return (
     <Popper className={s.root} open={open}>
-      {!link ? (
+      {!openLink ? (
         /* Formatting controls */
         <ButtonGroup variant="text" color="primary">
           <IconButton
@@ -105,7 +109,7 @@ export function Toolbar(props: ToolbarProps) {
             size="small"
             onClick={() => {
               setCPSelection(editor.selection);
-              setLink(true);
+              setOpenLink(true);
             }}
           >
             <Link fontSize="small" />
@@ -124,7 +128,7 @@ export function Toolbar(props: ToolbarProps) {
               <Close
                 className={s.close}
                 fontSize="small"
-                onClick={() => setLink(false)}
+                onClick={() => setOpenLink(false)}
               />
             }
             placeholder="https://"

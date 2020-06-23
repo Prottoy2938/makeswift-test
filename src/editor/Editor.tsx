@@ -8,8 +8,8 @@ import {
   RenderLeafProps,
 } from "slate-react";
 
-import { DefaultElement } from "./elements";
-import { Toolbar } from "./Toolbar";
+import { DefaultElement } from "./utils/DefaultElement";
+import { Toolbar } from "./utils/Toolbar";
 import { withHistory } from "slate-history";
 import isUrl from "is-url";
 
@@ -54,14 +54,6 @@ function renderLeaf(props: RenderLeafProps) {
   if (leaf.underlined) {
     children = <u>{children}</u>;
   }
-  // leaf.url
-  // if(leaf.link){
-  //   <a {...attributes} href={element.url}>
-  //   {children}
-  // </a>
-  // }
-
-  console.log(leaf, attributes);
 
   return <span {...attributes}>{children}</span>;
 }
@@ -86,13 +78,6 @@ export function SlateEditor(props: EditorProps) {
         renderElement={renderElement}
         renderLeaf={renderLeaf}
         {...other} //placeholder, autoFocus, spellCheck
-        onBlur={() => {
-          if (inputRef && inputRef.current) {
-            // @ts-ignore: Object is possibly 'null'.
-            inputRef.current.focus();
-            console.log("I'm running  after the input is blurred");
-          }
-        }}
       />
     </Slate>
   );
@@ -170,8 +155,6 @@ const wrapLink = (editor: any, url: string) => {
 const insertLink = (editor: any, urlLink: string) => {
   console.log(urlLink);
   if (editor.selection) {
-    console.log(urlLink);
-
     wrapLink(editor, urlLink);
   }
 };
