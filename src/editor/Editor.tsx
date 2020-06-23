@@ -11,8 +11,7 @@ import {
 import { DefaultElement } from "./utils/DefaultElement";
 import { Toolbar } from "./utils/Toolbar";
 import { withHistory } from "slate-history";
-import isUrl from "is-url";
-
+import { insertLink, toggleFormat, withLinks } from "./utils/HelperFunction";
 export interface EditorProps {
   value: Node[];
   onChange: (value: Node[]) => void;
@@ -64,7 +63,6 @@ export function SlateEditor(props: EditorProps) {
     () => withLinks(withHistory(withReact(createEditor()))),
     [],
   );
-  const inputRef = React.useRef(null);
 
   return (
     <Slate editor={editor} value={value} onChange={onChange}>
@@ -84,86 +82,3 @@ export function SlateEditor(props: EditorProps) {
 }
 
 export { Node };
-
-const toggleFormat = (editor: any, format: string) => {
-  const isActive = isFormatActive(editor, format);
-
-  Transforms.setNodes(
-    editor,
-    { [format]: isActive ? null : true },
-    { match: Text.isText, split: true },
-  );
-};
-
-const isFormatActive = (editor: any, format: string) => {
-  const [match] = Editor.nodes(editor, {
-    match: (n: any) => n[format] === true,
-    mode: "highest",
-  });
-  return !!match;
-};
-
-const withLinks = (editor: any) => {
-  const { insertData, insertText, isInline } = editor;
-
-  editor.isInline = (element: any) => {
-    return element.type === "link" ? true : isInline(element);
-  };
-
-  editor.insertText = (text: string) => {
-    if (text && isUrl(text)) {
-      wrapLink(editor, text);
-    } else {
-      insertText(text);
-    }
-  };
-
-  editor.insertData = (data: any) => {
-    const text = data.getData("text/plain");
-
-    if (text && isUrl(text)) {
-      wrapLink(editor, text);
-    } else {
-      insertData(data);
-    }
-  };
-
-  return editor;
-};
-
-const wrapLink = (editor: any, url: string) => {
-  if (isLinkActive(editor)) {
-    unwrapLink(editor);
-  }
-
-  const { selection } = editor;
-  const isCollapsed = selection && Range.isCollapsed(selection);
-  const link = {
-    type: "link",
-    url,
-    children: isCollapsed ? [{ text: url }] : [],
-  };
-
-  if (isCollapsed) {
-    Transforms.insertNodes(editor, link);
-  } else {
-    Transforms.wrapNodes(editor, link, { split: true });
-    Transforms.collapse(editor, { edge: "end" });
-  }
-};
-
-const insertLink = (editor: any, urlLink: string) => {
-  console.log(urlLink);
-  if (editor.selection) {
-    wrapLink(editor, urlLink);
-  }
-};
-
-const isLinkActive = (editor: any) => {
-  const [link] = Editor.nodes(editor, { match: (n) => n.type === "link" });
-  return !!link;
-};
-
-const unwrapLink = (editor: any) => {
-  Transforms.unwrapNodes(editor, { match: (n) => n.type === "link" });
-};
