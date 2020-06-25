@@ -1,7 +1,6 @@
 import { Transforms, Editor, Text, Range } from "slate";
 
 export const insertLink = (editor: any, urlLink: string): void => {
-  console.log(urlLink);
   if (editor.selection) {
     wrapLink(editor, urlLink);
   }
@@ -28,7 +27,9 @@ export const toggleFormat = (editor: any, format: string): void => {
 
 export const isFormatActive = (editor: any, format: string): boolean => {
   const [match] = Editor.nodes(editor, {
-    match: (n: any) => n[format] === true,
+    match: (n: any) => {
+      return n[format] === true;
+    },
     mode: "highest",
   });
   return !!match;

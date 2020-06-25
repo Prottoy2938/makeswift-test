@@ -1,5 +1,5 @@
 import React from "react";
-import { createEditor, Node, Transforms, Editor, Text, Range } from "slate";
+import { createEditor, Node } from "slate";
 import {
   Editable,
   withReact,
@@ -12,6 +12,7 @@ import { DefaultElement } from "./utils/DefaultElement";
 import { Toolbar } from "./utils/Toolbar";
 import { withHistory } from "slate-history";
 import { insertLink, toggleFormat, withLinks } from "./utils/HelperFunction";
+
 export interface EditorProps {
   value: Node[];
   onChange: (value: Node[]) => void;
@@ -26,7 +27,6 @@ function renderElement(props: RenderElementProps) {
     children,
     element,
   }: { attributes: any; children: any; element: any } = props;
-  console.log(element);
   switch (element.type) {
     case "link":
       return (
@@ -57,7 +57,7 @@ function renderLeaf(props: RenderLeafProps) {
   return <span {...attributes}>{children}</span>;
 }
 
-export function SlateEditor(props: EditorProps) {
+export const SlateEditor: React.FC<EditorProps> = (props: EditorProps) => {
   const { value, onChange, ...other } = props;
   const editor = React.useMemo(
     () => withLinks(withHistory(withReact(createEditor()))),
@@ -79,6 +79,6 @@ export function SlateEditor(props: EditorProps) {
       />
     </Slate>
   );
-}
+};
 
 export { Node };

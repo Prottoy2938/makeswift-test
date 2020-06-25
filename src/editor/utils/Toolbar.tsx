@@ -12,7 +12,6 @@ import {
   FormatUnderlined,
   Link,
   Close,
-  EditRounded,
 } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -48,7 +47,7 @@ export interface ToolbarProps extends Omit<PopperProps, "children"> {
   insertLink: (editor: any, urlLink: string) => void;
 }
 
-export function Toolbar(props: ToolbarProps) {
+export const Toolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
   const [openLink, setOpenLink] = React.useState(false);
   const [urlLink, setUrlLink] = React.useState("");
   //capturing text selection for `add url feature`
@@ -139,4 +138,4 @@ export function Toolbar(props: ToolbarProps) {
       )}
     </Popper>
   );
-}
+};
